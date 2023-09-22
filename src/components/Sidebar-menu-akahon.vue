@@ -1,20 +1,23 @@
 <template  >
-  <div class="sidebar" :class="isOpened ? 'open' : ''" :style="cssVars">
+  <div class="sidebar" :class="{ open: isOpened }" :style="cssVars" @mouseenter="isOpened = true"
+    @mouseleave="isOpened = false">
+
     <div class="logo-details" style="margin: 6px 14px 0 14px">
       <v-icon style="color: #8A2BE2;">mdi-alpha-m-circle</v-icon>
 
-      <img v-if="menuLogo" :src="menuLogo" alt="menu-logo" class="menu-logo icon">
-      <i v-else class="bx icon" :class="menuIcon" />
-      <div class="logo_name">
-        {{ menuTitle }}
+      <div style="display: flex; align-items: center; cursor: pointer;">
+        <label class="logo_name">{{ menuTitle }}</label>
+
+        <input style="margin-left: 50px; size: 10px;" type="radio" />
+
       </div>
-      <i class="bx" id="btn" @click="isOpened = !isOpened" />
+
     </div>
 
-    <div style="
+    <div style="margin-left: 0%;
           display: flex;;
 
-          flex-direction: column;
+
           justify-content: space-between;
           flex-grow: 1;
           max-height: calc(100% - 60px);
@@ -22,21 +25,60 @@
 
       <div id="my-scroll" style="margin-left: 0%;">
         <ul class="nav-list">
-          <div>
 
 
-            <li> <a><v-icon> mdi-home</v-icon> Dashboard</a></li>
+          <li @mouseenter="dashboardOpen = true" @mouseleave="dashboardOpen = false" @click="toggleBackground('li')" Added
+            click handler :class="{ clicked: liClicked }">
+            <a @click="toggleDashboardSubMenu" :class="{ 'active-link': dashboardClicked }">
+              <v-icon class="navbar-icon">mdi-home</v-icon>
+              Dashboard
+              <v-icon style="color: red;">mdi-new-box</v-icon>
+              <span style="margin-left: -20px;">
+                <v-icon class="arrow-icon" :color="dashboardOpen ? 'primary' : ''">
+                  {{ dashboardOpen ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+                </v-icon>
+              </span>
+            </a>
 
+            <ul class="sub-menu" v-if="dashboardOpen" @click="toggleBackground('ul')" :class="{ 'clicked': liClicked }">
+              <!-- Added click handler -->
 
-
-
-          </div>
-
-          <v-divider></v-divider>
+              <li> <a><v-icon>
+                    mdi-circle-outline</v-icon> CRM</a></li>
+              <li> <a> <v-icon>
+                    mdi-circle-outline</v-icon> Analytics </a></li>
+              <li><a> <v-icon>
+                    mdi-circle-outline</v-icon> eCommerece </a></li>
+            </ul>
+          </li>
+          <v-divider> </v-divider>
           <li> <a><v-icon> mdi-email-open-heart-outline</v-icon> Email</a></li>
           <li> <a><v-icon> mdi-message-outline</v-icon> Chat </a></li>
           <li><a> <v-icon> mdi-calendar-month</v-icon> Calender </a></li>
-          <li><a> <v-icon> mdi-receipt-text-check-outline</v-icon>Invoice</a> </li>
+
+
+
+          <li @mouseenter="invoiceOpen = true" @mouseleave="invoiceOpen = false" :class="{ clicked: invoiceClicked }">
+            <a @click="toggleInvoiceSubMenu">
+              <v-icon class="navbar-icon">mdi-receipt</v-icon>
+              INVOICE
+
+              <span style="margin-left: 10px;">
+                <v-icon class="arrow-icon" :color="invoiceOpen ? 'primary' : ''">
+                  {{ invoiceOpen ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+                </v-icon>
+              </span>
+            </a>
+            <ul class="sub-menu" v-if="invoiceOpen" @click="toggleBackground('ulInvoice')"
+              :class="{ 'clicked': invoiceClicked }">
+              <li><a><v-icon> mdi-circle-outline</v-icon> List</a></li>
+              <li><a><v-icon> mdi-circle-outline</v-icon> Preview</a></li>
+              <li><a><v-icon> mdi-circle-outline</v-icon>Edit</a></li>
+              <li><a><v-icon> mdi-circle-outline</v-icon> Add</a></li>
+            </ul>
+          </li>
+
+
           <li> <a><v-icon> mdi-account-multiple-check</v-icon> User</a></li>
           <li> <a><v-icon> mdi-form-select</v-icon> Form Layout</a></li>
 
@@ -46,34 +88,34 @@
 
       </div>
 
-
     </div>
   </div>
 </template>
 
 <script>
-
+import { VIcon } from 'vuetify/lib';
 export default {
 
 
+  computed: {
+    sidebarStyles() {
+      return {
+        '--sidebar-margin-left': this.isOpened ? '0' : '-200px', // Add this CSS variable
+      };
+    },
+  },
+
+  components: {
+    VIcon,
+  },
   name: 'SidebarMenuAkahon',
   props: {
     //! Menu settings
-
-    isMenuOpen: {
-      type: Boolean,
-      default: false,
-    },
-
-
     menuTitle: {
       type: String,
       default: 'MATERIO',
     },
-    menuLogo: {
-      type: String,
-      default: '',
-    },
+
     menuIcon: {
       type: String,
       icon: "mdi-alpha-m-circle"
@@ -81,16 +123,6 @@ export default {
 
 
     //! Menu items
-    menuItems: {
-      type: Array,
-      default: () => [
-
-
-
-      ],
-    },
-
-
 
     //! Styles
     bgColor: {
@@ -98,48 +130,25 @@ export default {
       default: '#F8F8FF',
 
     },
-    secondaryColor: {
-      type: String,
-      default: '#DCDCDC',
-    },
-    homeSectionColor: {
-      type: String,
-      default: '#e4e9f7',
-    },
+
+
     logoTitleColor: {
       type: String,
       default: '#8A2BE2',
     },
-    iconsColor: {
-      type: String,
-      default: '#000000',
-    },
-    itemsTooltipColor: {
-      type: String,
-      default: '#e4e9f7',
-    },
-
-    menuItemsHoverColor: {
-      type: String,
-      default: '#9400D3',
 
 
-    },
-    menuItemsTextColor: {
-      type: String,
-      default: '#000000',
-    },
-    menuFooterTextColor: {
-      type: String,
-      default: '#fff',
-    },
   },
   data() {
     return {
       isOpened: false,
-    }
+      dashboardOpen: false,
+      dashboardClicked: false, // Track clicked state for Dashboard
+      invoiceOpen: false,
+      liClicked: false,
+      invoiceClicked: false,
+    };
   },
-
   computed: {
     cssVars() {
       return {
@@ -148,7 +157,7 @@ export default {
         '--secondary-color': this.secondaryColor,
         '--home-section-color': this.homeSectionColor,
         '--logo-title-color': this.logoTitleColor,
-        '--icons-color': this.iconsColor,
+
         '--items-tooltip-color': this.itemsTooltipColor,
         '--serach-input-text-color': this.searchInputTextColor,
         // '--menu-items-hover-color': this.menuItemsHoverColor,
@@ -160,16 +169,35 @@ export default {
   },
 
   methods: {
+    toggleDashboardSubMenu() {
+      // Toggle the dashboardOpen property on click
+      this.dashboardOpen = !this.dashboardOpen;
+      this.dashboardOpen = !this.dashboardOpen;
+      this.liClicked = !this.liClicked;
 
+    },
 
+    toggleInvoiceSubMenu() {
+      // Define the behavior for toggling the Invoice submenu here
+      this.invoiceOpen = !this.invoiceOpen;
+      this.invoiceClicked = !this.invoiceClicked;
+    },
+    handleSidebarMouseLeave() {
+      // Close the sub-menu when the mouse leaves the sidebar
+      this.dashboardOpen = false;
+    },
   },
+
 }
 </script>
 
 <style>
-/* Google Font Link */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-@import url('https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css');
+.active-link {
+  background-color: blueviolet;
+  /* Change this color as needed */
+  color: #fff;
+  /* Change text color for active link */
+}
 
 * {
   margin: 0;
@@ -178,13 +206,6 @@ export default {
   font-family: 'Poppins', sans-serif;
   opacity: 100;
 }
-
-li:hover {
-  background: linear-gradient(90deg, rgb(192, 170, 214) 10%, rgb(147, 97, 197), rgb(160, 73, 247));
-  border-radius: 30px 150px 150px 30px;
-
-}
-
 
 body {
   transition: all 0.5s ease;
@@ -197,11 +218,10 @@ body {
   margin: 0 10px 0 10px;
 }
 
-
 .sidebar {
 
-
-  display: block;
+  margin-left: var(--sidebar-margin-left);
+  transition: margin-left 0.5s ease;
   width: 100%0%;
   height: 100%;
   cursor: pointer;
@@ -215,8 +235,8 @@ body {
   top: 0;
   height: 100%;
   min-height: min-content;
-  /* overflow-y: auto; */
-  width: 78px;
+  overflow-y: auto;
+  width: 80px;
   background: var(--bg-color);
   /* padding: 6px 14px 0 14px; */
   z-index: 99;
@@ -226,6 +246,7 @@ body {
 
 .sidebar.open {
   width: 150px;
+
 }
 
 .sidebar .logo-details {
@@ -241,23 +262,9 @@ body {
 
 }
 
-
 .sidebar.open .logo-details .icon,
 .sidebar.open .logo-details .logo_name {
-  opacity: 4;
-}
-
-.sidebar .logo-details #btn {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  font-size: 22px;
-  transition: all 0.4s ease;
-  font-size: 23px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.5s ease;
+  opacity: 1 !important;
 }
 
 .sidebar.open .logo-details #btn {
@@ -274,11 +281,10 @@ body {
 }
 
 .sidebar .nav-list {
-  margin-top: 20px;
-  margin-left: 10px;
-  /* margin-bottom: 60px; */
-  /* height: 100%; */
-  /* min-height: min-content; */
+  margin-top: 10px;
+  margin-left: 5px;
+
+
 }
 
 .sidebar li {
@@ -288,34 +294,18 @@ body {
 }
 
 
-
-
-
-
-
-
-.ul {
-  background: var(--menu-items-hover-color);
-  background: var(--bg-color)
-}
-
-.li:hover {
-  background: var(--menu-items-hover-color);
-  background: var(--bg-color)
-}
-
-.li {
-  margin-left: 0%;
-}
-
-
-
-
-
-
-
 #my-scroll::-webkit-scrollbar {
   display: none;
 
 }
+
+/* Rotate the arrow icon when the sub-menu is open */
+.arrow-icon.open {
+  transform: rotate(180deg);
+
+}
 </style>
+
+
+
+
