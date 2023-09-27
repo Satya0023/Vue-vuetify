@@ -1,7 +1,7 @@
 
 
 <template>
-    <v-card>
+    <v-card style="width: ;">
 
 
         <v-card-title class="card-title">

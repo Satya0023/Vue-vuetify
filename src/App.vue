@@ -6,7 +6,7 @@
     </div>
 
     <div class="navbar" id="navbar">
-      <div style="margin-top: 5px; margin-left: 8.5%; margin-right: 3%;">
+      <div style="margin-top: 5px; margin-left: 8%; margin-right: 3%;">
         <v-toolbar fixed="top" style="background-color: #F8F8FF">
           <div style="background-color: #F8F8FF;">
             <v-text-field placeholder="search" hide-details prepend-icon="mdi-magnify"></v-text-field>
@@ -49,6 +49,7 @@
               <div class="flex-item">
                 <v-card>
                   <card1 />
+
                 </v-card>
               </div>
               <div class="flex-item">
@@ -64,7 +65,7 @@
             </div>
 
             <!-- Second row -->
-            <div class="container">
+            <div class="container" style="width: 100%;">
               <div class="flex-item" style="height: 100%; width: 58%; margin-top: 10px;">
                 <v-card>
                   <card4 />
@@ -112,7 +113,22 @@
           </v-container>
         </v-main>
       </v-layout>
+
     </v-container>
+    <v-footer class="bg-grey-lighten-1" style="font-size: medium; margin-left: 70px;">
+      <label>© 2023 Made With <v-icon style="color: red;">mdi-heart-outline </v-icon>By </label>
+      <label><a>TheamSelection</a></label>
+
+      <v-row style="margin-left:500px;">
+
+
+        <a v-for="link in links" :key="link" color="blueviolet" variant="text" class="mx-2" rounded="xl"
+          style="margin-right: 15px; color:blueviolet">
+          {{ link }}
+        </a>
+
+      </v-row>
+    </v-footer>
   </v-app>
 </template>
 
@@ -121,7 +137,7 @@ import Vue from "vue";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import { BIcon, BIconArrowUp, BIconArrowDown } from "bootstrap-vue";
 import donougtChart from "./components/donougtChart.vue";
-
+import { VCard, VCardItem } from 'vuetify/lib';
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.component("BIcon", BIcon);
@@ -139,6 +155,7 @@ import card7 from "@/components/card7.vue";
 import card8 from "@/components/card8.vue";
 import card9 from "@/components/card9.vue";
 import card10 from "@/components/card10.vue";
+import foot from "@/components/foot.vue";
 
 export default {
   name: "App",
@@ -154,15 +171,38 @@ export default {
     card8,
     card9,
     card10,
+    foot,
+
+    VCard,
+    VCardItem,
     donougtChart,
 
   },
+  data: () => ({
+    links: [
+      'Home',
+      'About Us',
+      'Team',
+      'Services',
+      'Contact Us',
+    ],
+  }),
 };
+
+
+
+
+
+
+
+
 </script>
 
 <style>
 .container-fluid {
-  width: 100%;
+  width: 900px;
+  margin-right: 0px;
+  margin-left: 90px;
 }
 
 .container {
@@ -172,20 +212,9 @@ export default {
   padding: 5px;
 }
 
-.flex-item {
-  padding: 10px;
-  margin: 10px;
-}
 
-.navbar {
-  margin-top: 0;
-  position: relative;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-  opacity: 100%;
-}
+
+
 
 #navbar {
   margin-top: 0;
@@ -211,12 +240,7 @@ navigation-drawer {
   background-color: #dcdcdc;
 }
 
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  border-radius: 10px;
-  padding: 5px;
-}
+
 
 .flex-item {
   padding: 5px;
@@ -236,13 +260,7 @@ v-icon {
   color: red;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-  opacity: 100;
-}
+
 
 .container-fluid {
   width: 100%;

@@ -1,14 +1,14 @@
-<template  >
-  <div class="sidebar" :class="{ open: isOpened }" :style="cssVars" @mouseenter="isOpened = true"
-    @mouseleave="isOpened = false">
-
+<template>
+  <div class="sidebar" :class="{ open: isOpened }" :style="cssVars" @mouseenter="mouseEnterSidebar"
+    @mouseleave="mouseLeaveSidebar">
     <div class="logo-details" style="margin: 6px 14px 0 14px">
-      <v-icon style="color: #8A2BE2;">mdi-alpha-m-circle</v-icon>
-
+      <!-- <v-icon style="color: #8A2BE2;">mdi-alpha-m-circle</v-icon> -->
+      <img src="../assets/Logo2.png" style="color: #8A2BE2;  width: 30px; height: 30px;">
       <div style="display: flex; align-items: center; cursor: pointer;">
         <label class="logo_name">{{ menuTitle }}</label>
 
-        <input style="margin-left: 50px; size: 10px;" type="radio" />
+        <input for="" style="margin-left: 50px; size: 10px;" type="radio" id="stopHoverRadio" v-model="isRadioChecked" />
+
 
       </div>
 
@@ -27,9 +27,11 @@
         <ul class="nav-list">
 
 
-          <li @mouseenter="dashboardOpen = true" @mouseleave="dashboardOpen = false" @click="toggleBackground('li')" Added
-            click handler :class="{ clicked: liClicked }">
-            <a @click="toggleDashboardSubMenu" :class="{ 'active-link': dashboardClicked }">
+
+
+
+          <li>
+            <a @click="toggleDashboardSubMenu">
               <v-icon class="navbar-icon">mdi-home</v-icon>
               Dashboard
               <v-icon style="color: red;">mdi-new-box</v-icon>
@@ -39,18 +41,25 @@
                 </v-icon>
               </span>
             </a>
+            <ul class="sub-menu" v-show="dashboardOpen">
+              <li @click="loadExternalWebsite">
+                <a :class="{ 'clicked': dashboardClicked }"><v-icon>mdi-circle-outline</v-icon> CRM</a>
 
-            <ul class="sub-menu" v-if="dashboardOpen" @click="toggleBackground('ul')" :class="{ 'clicked': liClicked }">
-              <!-- Added click handler -->
-
-              <li> <a><v-icon>
-                    mdi-circle-outline</v-icon> CRM</a></li>
-              <li> <a> <v-icon>
-                    mdi-circle-outline</v-icon> Analytics </a></li>
-              <li><a> <v-icon>
-                    mdi-circle-outline</v-icon> eCommerece </a></li>
+              </li>
+              <li @click="toggleBackground('dashboard')">
+                <a :class="{ 'clicked': dashboardClicked }"><v-icon>mdi-circle-outline</v-icon> Analytics</a>
+              </li>
+              <li @click="toggleBackground('dashboard')">
+                <a :class="{ 'clicked': dashboardClicked }"><v-icon>mdi-circle-outline</v-icon> eCommerece</a>
+              </li>
             </ul>
           </li>
+
+
+
+
+
+
           <v-divider> </v-divider>
           <li> <a><v-icon> mdi-email-open-heart-outline</v-icon> Email</a></li>
           <li> <a><v-icon> mdi-message-outline</v-icon> Chat </a></li>
@@ -69,7 +78,7 @@
                 </v-icon>
               </span>
             </a>
-            <ul class="sub-menu" v-if="invoiceOpen" @click="toggleBackground('ulInvoice')"
+            <ul class="sub-menu" v-if="invoiceOpen" @click="toggleBackground('ulInvo ice')"
               :class="{ 'clicked': invoiceClicked }">
               <li><a><v-icon> mdi-circle-outline</v-icon> List</a></li>
               <li><a><v-icon> mdi-circle-outline</v-icon> Preview</a></li>
@@ -82,7 +91,8 @@
           <li> <a><v-icon> mdi-account-multiple-check</v-icon> User</a></li>
           <li> <a><v-icon> mdi-form-select</v-icon> Form Layout</a></li>
 
-
+          <li> <a><v-icon> mdi-id-card</v-icon> Cards</a></li>
+          <li> <a><v-icon> mdi-puzzle</v-icon> Extension</a></li>
         </ul>
 
 
@@ -141,13 +151,24 @@ export default {
   },
   data() {
     return {
-      isOpened: false,
+      externalWebsiteVisible: false,
       dashboardOpen: false,
       dashboardClicked: false, // Track clicked state for Dashboard
       invoiceOpen: false,
       liClicked: false,
       invoiceClicked: false,
+      shouldApplyEffects: true,
+      isOpened: false,
+
+      isRadioChecked: false,
+
     };
+  },
+  watch: {
+    isRadioChecked(newValue) {
+      // When the radio button is checked, stop the effects by setting isOpened to true
+      this.isOpened = !newValue;
+    },
   },
   computed: {
     cssVars() {
@@ -169,12 +190,21 @@ export default {
   },
 
   methods: {
+
+
+    loadExternalWebsite() {
+      this.externalWebsiteVisible = true;
+    },
+    toggleBackground(section) {
+      // Toggle the background color class for the clicked section
+      if (section === 'dashboard') {
+        this.dashboardClicked = !this.dashboardClicked;
+      }
+      // Add similar logic for other sections as needed
+    },
     toggleDashboardSubMenu() {
       // Toggle the dashboardOpen property on click
       this.dashboardOpen = !this.dashboardOpen;
-      this.dashboardOpen = !this.dashboardOpen;
-      this.liClicked = !this.liClicked;
-
     },
 
     toggleInvoiceSubMenu() {
@@ -186,48 +216,48 @@ export default {
       // Close the sub-menu when the mouse leaves the sidebar
       this.dashboardOpen = false;
     },
-  },
 
+    mouseEnterSidebar() {
+      if (!this.isRadioChecked) {
+        this.isOpened = true;
+        this.dashboardOpen = true
+      }
+    },
+    mouseLeaveSidebar() {
+      if (!this.isRadioChecked) {
+        this.isOpened = false;
+        this.dashboardOpen = false
+      }
+    },
+
+  }
 }
 </script>
 
 <style>
-.active-link {
-  background-color: blueviolet;
-  /* Change this color as needed */
-  color: #fff;
-  /* Change text color for active link */
-}
+/* Reset and base styles */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-  opacity: 100;
-}
 
+/* Body styles */
 body {
-  transition: all 0.5s ease;
   background-color: #FFFFFF;
-  color: 9155FD;
+  color: #9155FD;
 }
 
+/* Logo styles */
 .menu-logo {
   width: 30px;
   margin: 0 10px 0 10px;
 }
 
+/* Sidebar styles */
 .sidebar {
-
   margin-left: var(--sidebar-margin-left);
   transition: margin-left 0.5s ease;
-  width: 100%0%;
+  width: 100%;
   height: 100%;
   cursor: pointer;
-
   position: relative;
-
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -238,17 +268,15 @@ body {
   overflow-y: auto;
   width: 80px;
   background: var(--bg-color);
-  /* padding: 6px 14px 0 14px; */
   z-index: 99;
   transition: all 0.5s ease;
-
 }
 
 .sidebar.open {
   width: 150px;
-
 }
 
+/* Logo details styles */
 .sidebar .logo-details {
   height: 60px;
   display: flex;
@@ -259,7 +287,6 @@ body {
 .sidebar .logo-details .icon {
   opacity: 0;
   transition: all 0.5s ease;
-
 }
 
 .sidebar.open .logo-details .icon,
@@ -271,6 +298,7 @@ body {
   text-align: right;
 }
 
+/* Icon styles */
 .sidebar i {
   color: var(--icons-color);
   height: 60px;
@@ -280,30 +308,53 @@ body {
   line-height: 60px;
 }
 
+/* Navigation list styles */
 .sidebar .nav-list {
   margin-top: 10px;
   margin-left: 5px;
-
-
 }
 
+/* List item styles */
 .sidebar li {
   position: relative;
   margin: 8px 0;
   list-style: none;
 }
 
-
-#my-scroll::-webkit-scrollbar {
-  display: none;
-
-}
-
 /* Rotate the arrow icon when the sub-menu is open */
 .arrow-icon.open {
   transform: rotate(180deg);
-
 }
+
+/* Hide VIcon on hover */
+.sidebar v-icon:hover {
+  display: none;
+}
+
+/* Dashboard submenu styles */
+.sub-menu li {
+
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+  transition: background-color 0.3s;
+}
+
+/* Style the clicked item under Dashboard submenu */
+ul.sub-menu li.clicked {
+  background-color: blueviolet;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+/* Active link styles */
+.active-link {
+  background-color: blueviolet;
+  color: #fff;
+}
+
+/* Additional component-specific styles can be added below this */
 </style>
 
 
