@@ -5,24 +5,35 @@
       <sidebar-menu-akahon />
     </div>
 
-    <div class="navbar" id="navbar">
-      <div style="margin-top: 5px; margin-left: 8%; margin-right: 3%;">
-        <v-toolbar fixed="top" style="background-color: #F8F8FF">
+    <v-main>
+      <div class="navbar" id="navbar">
+        <v-toolbar style="margin-top: 5px; margin-left: 8%; margin-right: 3%;background-color: #F8F8FF">
           <div style="background-color: #F8F8FF;">
             <v-text-field placeholder="search" hide-details prepend-icon="mdi-magnify"></v-text-field>
           </div>
           <span class="meta-key">⌘K</span>
           <v-spacer></v-spacer>
 
-          <v-btn icon>
-            <v-icon>mdi-translate</v-icon>
-          </v-btn>
+          <!-- Pop-up menu -->
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-translate</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="selectOption('Option 1')">English</v-list-item>
+              <v-list-item @click="selectOption('Option 2')">Hindi</v-list-item>
+              <v-list-item @click="selectOption('Option 3')">Marathi</v-list-item>
+            </v-list>
+          </v-menu>
 
           <v-btn icon>
             <v-icon large>mdi-laptop</v-icon>
           </v-btn>
 
-          <v-btn icon>
+
+          <v-btn icon @click="openCard">
             <v-icon>mdi-apps</v-icon>
           </v-btn>
 
@@ -37,7 +48,126 @@
           </v-btn>
         </v-toolbar>
       </div>
-    </div>
+    </v-main>
+
+
+    <!-- CARD DIALOG BOX -->
+
+
+    <v-dialog v-model="cardOpen" max-width="400">
+      <v-card>
+        <label style="font-size: x-large;" @click="closeCard"> Shortcuts </label>
+        <v-avatar size="35" style="margin-left: 220px;">
+          <a href=""> <v-icon>mdi-apps</v-icon></a>
+        </v-avatar>
+
+        <v-card-text style="margin-top: 30px;">
+          <!-- Small Cards Section -->
+          <v-row id="custom-row">
+            <v-col id="custom-col" cols="6">
+              <v-card style="text-align: center;">
+                <div class="avatar-container">
+                  <v-avatar size="70" style="margin-left: 50px;">
+                    <v-icon size="40">mdi-calendar</v-icon>
+                  </v-avatar>
+
+                </div>
+                <div class="text-container" style="font-size: large;">
+                  <label style="margin: 0;">Lori Wells
+                  </label>
+                  <label style="margin: 0;font-size: small;">Appointments </label>
+                </div>
+              </v-card>
+            </v-col>
+            <v-col id="custom-col" cols="6">
+              <v-card style="text-align: center;">
+                <div class="avatar-container">
+                  <v-avatar size="70" style="margin-left: 50px;">
+                    <v-icon size="40">mdi-calendar</v-icon>
+                  </v-avatar>
+
+                </div>
+                <div class="text-container" style="font-size: large;">
+                  <label style="margin: 0;">Lori Wells
+                  </label>
+                  <label style="margin: 0;font-size: small;">Appointments </label>
+                </div>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <v-row id="custom-row">
+            <v-col id="custom-col" cols="6">
+              <v-card style="text-align: center;">
+                <div class="avatar-container">
+                  <v-avatar size="70" style="margin-left: 50px;">
+                    <v-icon size="40">mdi-calendar</v-icon>
+                  </v-avatar>
+
+                </div>
+                <div class="text-container" style="font-size: large;">
+                  <label style="margin: 0;">Lori Wells
+                  </label>
+                  <label style="margin: 0;font-size: small;">Appointments </label>
+                </div>
+              </v-card>
+            </v-col>
+            <v-col id="custom-col" cols="6">
+              <v-card style="text-align: center;">
+                <div class="avatar-container">
+                  <v-avatar size="70" style="margin-left: 50px;">
+                    <v-icon size="40">mdi-calendar</v-icon>
+                  </v-avatar>
+
+                </div>
+                <div class="text-container" style="font-size: large;">
+                  <label style="margin: 0;">Lori Wells
+                  </label>
+                  <label style="margin: 0;font-size: small;">Appointments </label>
+                </div>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <v-row id="custom-row">
+            <v-col id="custom-col" cols="6">
+              <v-card style="text-align: center;">
+                <div class="avatar-container">
+                  <v-avatar size="70" style="margin-left: 50px;">
+                    <v-icon size="40">mdi-calendar</v-icon>
+                  </v-avatar>
+
+                </div>
+                <div class="text-container" style="font-size: large;">
+                  <label style="margin: 0;">Lori Wells
+                  </label>
+                  <label style="margin: 0;font-size: small;">Appointments </label>
+                </div>
+              </v-card>
+            </v-col>
+            <v-col id="custom-col" cols="6">
+              <v-card style="text-align: center;">
+                <div class="avatar-container">
+                  <v-avatar size="70" style="margin-left: 50px;">
+                    <v-icon size="40">mdi-calendar</v-icon>
+                  </v-avatar>
+
+                </div>
+                <div class="text-container" style="font-size: large;">
+                  <label style="margin: 0;">Lori Wells
+                  </label>
+                  <label style="margin: 0;font-size: small;">Appointments </label>
+                </div>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+      </v-card>
+    </v-dialog>
+
+
+
 
     <!-- Main cards -->
     <v-container class="container-fluid">
@@ -178,15 +308,37 @@ export default {
     donougtChart,
 
   },
-  data: () => ({
-    links: [
-      'Home',
-      'About Us',
-      'Team',
-      'Services',
-      'Contact Us',
-    ],
-  }),
+
+
+  methods: {
+    selectLanguage(option) {
+      // Handle the selected option here
+      console.log('Selected Option:', option);
+
+      // Close the menu if needed
+      this.$refs.menu.hide();
+    },
+
+    openCard() {
+      this.cardOpen = true;
+    },
+    closeCard() {
+      this.cardOpen = false;
+    },
+  },
+  data() {
+    return {
+      cardOpen: false,
+      links: [
+        'Home',
+        'About Us',
+        'Team',
+        'Services',
+        'Contact Us',
+      ],
+
+    };
+  }
 };
 
 
@@ -199,9 +351,28 @@ export default {
 </script>
 
 <style>
-.container-fluid {
-  width: 900px;
+#custom-row {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #000;
+
+  /* Add 1px solid line at the top */
+}
+
+#custom-col {
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid #000;
+  /* Add 1px solid line at the left */
+  margin-left: 0px;
   margin-right: 0px;
+  margin-bottom: 0px;
+}
+
+.container-fluid {
+  width: 500px;
+  margin-right: 0px;
+  padding: 0px;
   margin-left: 90px;
 }
 
@@ -209,7 +380,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   border-radius: 10px;
-  padding: 5px;
+  padding: 0px;
 }
 
 

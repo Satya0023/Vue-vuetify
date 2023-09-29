@@ -7,53 +7,19 @@
       <label class="balance">Last month balance $234.40k</label>
 
       <!-- Left Section -->
-      <v-col>
-        <div style="margin-left: 10px;">
-          <svg :width="chartWidth" :height="chartHeight">
-            <!-- Y-axis label -->
-            <text x="10" y="15" text-anchor="middle" font-size="10" fill="black">Y-Axis</text>
-
-            <!-- X-axis label -->
-            <text x="250" y="290" text-anchor="middle" font-size="10" fill="black">X-Axis</text>
-
-            <!-- Y-axis values -->
-            <g v-for="(gridY, gridIndex) in gridYPositions" :key="'gridY' + gridIndex">
-              <text x="5" :y="gridY + 5" text-anchor="end" font-size="2" fill="black">{{ gridY }}</text>
-            </g>
-
-            <!-- X-axis values -->
-            <g v-for="(dataPoint, dataIndex) in data" :key="'dataPoint' + dataIndex">
-              <text :x="barPositions[dataIndex] + barWidth / 2" :y="chartHeight + 10" text-anchor="middle" font-size="8"
-                fill="black">{{ dataPoint }}</text>
-            </g>
-
-            <!-- Draw faint dotted horizontal lines (gridlines) -->
-            <g v-for="(gridY, gridIndex) in gridYPositions" :key="'gridLine' + gridIndex">
-              <line :x1="0" :y1="gridY" :x2="chartWidth" :y2="gridY" stroke="#ccc" stroke-dasharray="2,2" />
-            </g>
-
-            <!-- Create bars for each data point -->
-            <g v-for="(dataPoint, dataIndex) in data" :key="'bar' + dataIndex">
-              <rect :x="barPositions[dataIndex]" :y="chartHeight - (dataPoint * scaleFactor) / 2" :width="barWidth"
-                :height="(dataPoint * scaleFactor) / 2" fill="blueviolet" :rx="barCornerRadius" :ry="barCornerRadius" />
-
-              <!-- First segment of the bar (top half) -->
-              <rect :x="barPositions[dataIndex]" :y="chartHeight - dataPoint * scaleFactor" :width="barWidth"
-                :height="(dataPoint * scaleFactor) / 3" fill="orange" :rx="barCornerRadius" :ry="barCornerRadius" />
-
-              <!-- Second segment of the bar (bottom half) -->
-              <rect :x="barPositions[dataIndex]" :y="chartHeight - (dataPoint * scaleFactor) / 2" :width="barWidth"
-                :height="(dataPoint * scaleFactor) / 2" fill="blueviolet" :rx="barCornerRadius" :ry="barCornerRadius" />
-            </g>
-          </svg>
+      <v-col cols="5">
+        <div class="chart-container">
+          <canvas ref="myChart"></canvas>
         </div>
+
+
       </v-col>
 
       <!-- Vertical Divider -->
       <v-divider vertical class="divider-80"></v-divider>
 
       <!-- Right Section -->
-      <v-col style="margin-left: 40px;">
+      <v-col style="margin-left: 50px;">
         <table style="margin-top: 10px; margin-left: 3px;">
           <tbody>
             <tr>
@@ -86,31 +52,98 @@
 </template>
 
 <script>
+import { ref, onMounted, beforeUnmount } from 'vue';
+import { Chart, CategoryScale, LinearScale } from 'chart.js';
+
+Chart.register(CategoryScale, LinearScale);
+
 export default {
   data() {
     return {
-      chartWidth: 250,
-      chartHeight: 280,
-      data: [20, 40, 60, 40, 50, 45, 35, 40, 50],
-      barWidth: 10,
-      barSpacing: 15,
-      scaleFactor: 4,
-      barCornerRadius: 10,
-      gridYPositions: [40, 80, 120, 160, 200, 252],
+
+      chart: null,
+      chartData: {
+        labels: ["2016 ", "2017", "2018", "2019", "2020"],
+        datasets: [
+          {
+            label: "Upper Section",
+            data: [10, 12, 5, 2.5, 5],
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+            borderRadius: {
+              topLeft: 10, // Adjust as needed
+              topRight: 10, // Adjust as needed
+              bottomLeft: 0,
+              bottomRight: 0,
+            },
+          },
+          {
+            label: "Lower Section",
+            data: [-9, -15, -10.5, -10, -10],
+            backgroundColor: "#8a2be2",
+            borderColor: "#8a2be2",
+            borderWidth: 1,
+            borderRadius: {
+              topLeft: 0,
+              topRight: 0,
+              bottomLeft: 10, // Adjust as needed
+              bottomRight: 10, // Adjust as needed
+            },
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            beginAtZero: true,
+          },
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
     };
   },
-  computed: {
-    totalWidth() {
-      return this.data.length * (this.barWidth + this.barSpacing);
+  mounted() {
+    this.calculateChartHeight();
+    window.addEventListener('resize', this.calculateChartHeight);
+    this.renderChart();
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.calculateChartHeight);
+  },
+  methods: {
+    calculateChartHeight() {
+      const chartContainer = document.querySelector('.chart-container');
+      if (chartContainer) {
+        const chartHeight = chartContainer.clientHeight;
+        this.chartHeight = chartHeight;
+      }
     },
-    barPositions() {
-      return this.data.map((_, index) => (index * (this.barWidth + this.barSpacing)) + (this.chartWidth - this.totalWidth) / 2);
+    renderChart() {
+      const ctx = this.$refs.myChart.getContext('2d');
+      this.chart = new Chart(ctx, {
+        type: 'bar',
+        data: this.chartData,
+        options: this.options,
+      });
     },
   },
 };
 </script>
 
 <style>
+.chart-container {
+
+
+  width: 100%;
+  height: 300px;
+
+}
+
 #button {
   background-color: blueviolet;
   width: 250px;
