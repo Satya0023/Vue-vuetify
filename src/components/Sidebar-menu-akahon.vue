@@ -7,7 +7,8 @@
       <div style="display: flex; align-items: center; cursor: pointer;">
         <label class="logo_name">{{ menuTitle }}</label>
 
-        <input for="" style="margin-left: 50px; size: 10px;" type="radio" id="stopHoverRadio" v-model="isRadioChecked" />
+        <input for="" style="margin-left: 50px; size: 10px;" type="radio" id="stopHoverRadio" v-model="isRadioChecked"
+          @change="handleRadioClick" />
 
 
       </div>
@@ -24,14 +25,11 @@
         ">
 
       <div id="my-scroll" style="margin-left: 0%;">
+
+
         <ul class="nav-list">
-
-
-
-
-
           <li>
-            <a @click="toggleDashboardSubMenu">
+            <a @click="toggleDashboardSubMenu" :class="{ 'clicked': dashboardClicked }">
               <v-icon class="navbar-icon">mdi-home</v-icon>
               Dashboard
               <v-icon style="color: red;">mdi-new-box</v-icon>
@@ -43,56 +41,66 @@
             </a>
             <ul class="sub-menu" v-show="dashboardOpen">
               <li @click="loadExternalWebsite">
-                <a :class="{ 'clicked': dashboardClicked }"><v-icon>mdi-circle-outline</v-icon> CRM</a>
-
+                <a><v-icon>mdi-circle-outline</v-icon> CRM</a>
               </li>
               <li @click="toggleBackground('dashboard')">
-                <a :class="{ 'clicked': dashboardClicked }"><v-icon>mdi-circle-outline</v-icon> Analytics</a>
+                <a><v-icon>mdi-circle-outline</v-icon> Analytics</a>
               </li>
               <li @click="toggleBackground('dashboard')">
-                <a :class="{ 'clicked': dashboardClicked }"><v-icon>mdi-circle-outline</v-icon> eCommerece</a>
+                <a><v-icon>mdi-circle-outline</v-icon> eCommerece</a>
               </li>
             </ul>
           </li>
 
+          <v-divider></v-divider>
+          <li>
+            <a @click="toggleBackground('email')"><v-icon>mdi-email-open-heart-outline</v-icon> Email</a>
+          </li>
+          <li>
+            <a @click="toggleBackground('chat')"><v-icon>mdi-message-outline</v-icon> Chat</a>
+          </li>
+          <li>
+            <a @click="toggleBackground('calendar')"><v-icon>mdi-calendar-month</v-icon> Calendar</a>
+          </li>
 
-
-
-
-
-          <v-divider> </v-divider>
-          <li> <a><v-icon> mdi-email-open-heart-outline</v-icon> Email</a></li>
-          <li> <a><v-icon> mdi-message-outline</v-icon> Chat </a></li>
-          <li><a> <v-icon> mdi-calendar-month</v-icon> Calender </a></li>
-
-
-
-          <li @mouseenter="invoiceOpen = true" @mouseleave="invoiceOpen = false" :class="{ clicked: invoiceClicked }">
-            <a @click="toggleInvoiceSubMenu">
+          <li @mouseenter="invoiceOpen = true" @mouseleave="invoiceOpen = false">
+            <a @click="toggleInvoiceSubMenu" :class="{ 'clicked': invoiceClicked }">
               <v-icon class="navbar-icon">mdi-receipt</v-icon>
               INVOICE
-
               <span style="margin-left: 10px;">
                 <v-icon class="arrow-icon" :color="invoiceOpen ? 'primary' : ''">
                   {{ invoiceOpen ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
                 </v-icon>
               </span>
             </a>
-            <ul class="sub-menu" v-if="invoiceOpen" @click="toggleBackground('ulInvo ice')"
-              :class="{ 'clicked': invoiceClicked }">
-              <li><a><v-icon> mdi-circle-outline</v-icon> List</a></li>
-              <li><a><v-icon> mdi-circle-outline</v-icon> Preview</a></li>
-              <li><a><v-icon> mdi-circle-outline</v-icon>Edit</a></li>
-              <li><a><v-icon> mdi-circle-outline</v-icon> Add</a></li>
+            <ul class="sub-menu" v-if="invoiceOpen">
+              <li @click="toggleBackground('invoice-list')">
+                <a><v-icon>mdi-circle-outline</v-icon> List</a>
+              </li>
+              <li @click="toggleBackground('invoice-preview')">
+                <a><v-icon>mdi-circle-outline</v-icon> Preview</a>
+              </li>
+              <li @click="toggleBackground('invoice-edit')">
+                <a><v-icon>mdi-circle-outline</v-icon> Edit</a>
+              </li>
+              <li @click="toggleBackground('invoice-add')">
+                <a><v-icon>mdi-circle-outline</v-icon> Add</a>
+              </li>
             </ul>
           </li>
 
-
-          <li> <a><v-icon> mdi-account-multiple-check</v-icon> User</a></li>
-          <li> <a><v-icon> mdi-form-select</v-icon> Form Layout</a></li>
-
-          <li> <a><v-icon> mdi-id-card</v-icon> Cards</a></li>
-          <li> <a><v-icon> mdi-puzzle</v-icon> Extension</a></li>
+          <li>
+            <a @click="toggleBackground('user')"><v-icon>mdi-account-multiple-check</v-icon> User</a>
+          </li>
+          <li>
+            <a @click="toggleBackground('form-layout')"><v-icon>mdi-form-select</v-icon> Form Layout</a>
+          </li>
+          <li>
+            <a @click="toggleBackground('cards')"><v-icon>mdi-id-card</v-icon> Cards</a>
+          </li>
+          <li>
+            <a @click="toggleBackground('extension')"><v-icon>mdi-puzzle</v-icon> Extension</a>
+          </li>
         </ul>
 
 
@@ -230,6 +238,16 @@ export default {
       }
     },
 
+
+    handleRadioClick() {
+      // When the radio button is clicked, stop the sidebar from moving
+      this.isOpened = false;
+
+      // Set the mouseEnter and mouseLeave behavior to null
+      this.mouseEnterSidebar = false;
+      this.mouseLeaveSidebar = false;
+    },
+
   }
 }
 </script>
@@ -320,6 +338,7 @@ body {
   margin: 8px 0;
   list-style: none;
 }
+
 
 /* Rotate the arrow icon when the sub-menu is open */
 .arrow-icon.open {

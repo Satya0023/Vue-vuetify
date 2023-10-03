@@ -159,6 +159,8 @@ export default {
     border-radius: 10px;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
     width: 100%;
+    margin: 1px;
+    padding: 5px;
 }
 
 .card-title {
