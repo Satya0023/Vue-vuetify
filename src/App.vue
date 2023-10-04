@@ -48,6 +48,7 @@
           </v-btn>
         </v-toolbar>
       </div>
+
     </v-main>
 
 
@@ -317,6 +318,7 @@
     <v-footer class="bg-grey-lighten-1" style="font-size: medium; margin-left: 70px;">
       <label>© 2023 Made With <v-icon style="color: red;">mdi-heart-outline </v-icon>By </label>
       <label><a>TheamSelection</a></label>
+      <router-link to="/home">Go to About Page</router-link>
 
       <v-row style="margin-left:500px;">
 
@@ -332,7 +334,9 @@
 </template>
 
 <script>
-import Vue from "vue";
+
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import { BIcon, BIconArrowUp, BIconArrowDown } from "bootstrap-vue";
 import donougtChart from "./components/donougtChart.vue";
@@ -342,7 +346,9 @@ Vue.use(BootstrapVueIcons);
 Vue.component("BIcon", BIcon);
 Vue.component("BIconArrowUp", BIconArrowUp);
 Vue.component("BIconArrowDown", BIconArrowDown);
+Vue.use(VueRouter)
 
+import routes from "@/router/index"
 import SidebarMenuAkahon from "@/components/Sidebar-menu-akahon.vue";
 import card1 from "@/components/card1.vue";
 import card2 from "@/components/card2.vue";
@@ -356,8 +362,10 @@ import card9 from "@/components/card9.vue";
 import card10 from "@/components/card10.vue";
 import foot from "@/components/foot.vue";
 
+
 export default {
   name: "App",
+
   components: {
     SidebarMenuAkahon,
     card1,
@@ -377,6 +385,8 @@ export default {
     donougtChart,
 
   },
+
+
 
 
   methods: {
@@ -414,7 +424,15 @@ export default {
 
     };
   }
+
+
 };
+
+// new Vue({
+//   el: '#app',
+//   routes,
+//   render: (h) => h(App),
+// });
 
 
 
